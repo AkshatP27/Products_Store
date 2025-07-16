@@ -1,36 +1,14 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { asyncGetUsers } from './store/userActions'
-import axios from './utils/axiosconfig'
-import React, { useEffect } from 'react'
+import React from "react";
+import Mainroutes from "./routes/Mainroutes";
+import Navbar from "./components/Navbar";
 
 const App = () => {
-
-  // const getData = async () => {
-  //   try {
-  //     const res = await axios.get("/products")
-  //     const res1 = await axios.get("/users")
-  //     console.log("Products Response:",res);
-  //     console.log("Users Response:",res1);
-      
-  //   } catch (error) {
-  //     console.log(error);
-      
-  //   }
-  // }
-
-  const data = useSelector((state) => state);
-  const dispatch = useDispatch();
-
-  console.log(data);
-
-  useEffect(() => {
-    dispatch(asyncGetUsers());
-  }, [])
-  
-
   return (
-    <div>App</div>
-  )
-}
+    <div className="px-[9%] w-screen h-screen bg-gray-900 text-white font-thin">
+      <Navbar />
+      <Mainroutes />
+    </div>
+  );
+};
 
-export default App
+export default App;
