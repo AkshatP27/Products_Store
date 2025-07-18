@@ -3,14 +3,18 @@
     {
       "id": "1",
       "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-      "price": 109.95,
+      "price": "1099",
       "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
       "category": "men's clothing",
-      "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-      "rating": {
-        "rate": 3.9,
-        "count": 120
-      }
+      "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"
+    },
+    {
+      "id": "be4ymZfCYUZ9frK10p9TP",
+      "title": "Single Edge Safety Razor",
+      "image": "https://th.bing.com/th/id/OIP.fFkSGnA6aYXWf4u0-0EgQwHaE8?w=278&h=186&c=7&r=0&o=5&pid=1.7",
+      "price": "1710",
+      "description": "This is the description of the Safety Razor that have single edge blade.\n",
+      "category": "Men's grooming"
     }
   ],
   "users": [
@@ -20,6 +24,13 @@
       "email": "akshat@master.com",
       "password": "123456",
       "isAdmin": true
+    },
+    {
+      "id": "zy_NwK6h8eELHdJep_IT0",
+      "username": "akku27",
+      "email": "akshatp272004@gmail.com",
+      "password": "123456",
+      "isAdmin": false
     }
   ],
   "carts": []
