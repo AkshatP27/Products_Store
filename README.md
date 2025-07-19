@@ -45,7 +45,7 @@ Products_Store/
 - Admin can create products
 - Product listing and details
 - Add to cart (structure ready)
-- State persists user session using localStorage
+- State persists user session using localStorage and Redux (with asyncCurrentUser)
 
 ---
 
@@ -72,8 +72,8 @@ Products_Store/
 - UI updates automatically when the Redux state changes, thanks to React-Redux hooks.
 
 ### 5. Session Persistence
-- User session is persisted using localStorage. On app load, `asyncCurrentUser` checks localStorage and updates Redux state if a user is found.
-- This ensures the user stays logged in even after a page refresh.
+- User session is persisted using localStorage. On app load, the `App.jsx` component dispatches the `asyncCurrentUser` thunk, which checks localStorage and updates Redux state if a user is found.
+- This ensures the user stays logged in even after a page refresh or navigation.
 
 ### 6. Data Flow Example (Login)
 1. User submits login form in the UI.
@@ -81,12 +81,21 @@ Products_Store/
 3. Thunk sends a GET request to `/users` endpoint with credentials.
 4. If successful, user data is saved to localStorage and `loaduser` is dispatched.
 5. Redux state updates, UI re-renders to show the logged-in state.
+6. On app reload, `App.jsx` dispatches `asyncCurrentUser` to restore the session from localStorage.
 
 ### 7. Data Flow Example (Product Listing)
 1. On app load, `asyncLoadProducts` thunk is dispatched.
 2. Thunk fetches products from the backend and dispatches `loadproduct`.
 3. Redux state updates with the product list.
 4. Products page uses `useSelector` to get products and display them.
+
+---
+
+## Notable Code Usage
+
+- `asyncCurrentUser` is dispatched in `App.jsx` on app load to restore user session from localStorage.
+- All async actions (login, register, update, delete, logout) are handled in `src/store/actions/userActions.jsx`.
+- Redux state is updated using reducers in `src/store/reducers/`.
 
 ---
 
