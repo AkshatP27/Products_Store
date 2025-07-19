@@ -12,7 +12,7 @@ const Login = () => {
 
   const LoginHandler = (user) => {
     dispatch(asyncLoginUser(user));
-    navigate("/products");
+    navigate("/");
   };
 
   return (
