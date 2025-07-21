@@ -9,25 +9,23 @@ import {
 } from "../../store/actions/userActions";
 
 const UserProfile = () => {
-  const {
-    userReducer: { userData },
-  } = useSelector((state) => state);
+  const users = useSelector((state) => state.userReducer.userData);
 
   const { register, reset, handleSubmit } = useForm({
     defaultValues: {
-      username: userData?.username,
-      email: userData?.email,
-      password: userData?.password,
+      username: users?.username,
+      email: users?.email,
+      password: users?.password,
     },
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const UpdateUserProfileHandler = (user) => {
-    dispatch(asyncUpdateUser(userData.id, user));
+    dispatch(asyncUpdateUser(users.id, user));
   };
   const DeleteUserProfileHandler = () => {
-    dispatch(asyncDeleteUser(userData.id));
+    dispatch(asyncDeleteUser(users.id));
     navigate("/login");
   };
   const LogOutHandler = () => {
@@ -35,7 +33,7 @@ const UserProfile = () => {
     navigate("/login");
   };
 
-  return userData ? (
+  return users ? (
     <div>
       <form
         onSubmit={handleSubmit(UpdateUserProfileHandler)}
@@ -64,14 +62,14 @@ const UserProfile = () => {
         </button>
         <button
           type="button"
-            onClick={LogOutHandler}
+          onClick={LogOutHandler}
           className="mt-7 bg-red-400 text-gray-900 py-3 px-5 font-bold text-lg rounded-md"
         >
           Log Out User
         </button>
         <button
           type="button"
-            onClick={DeleteUserProfileHandler}
+          onClick={DeleteUserProfileHandler}
           className="mt-7 bg-red-500 text-gray-900 py-3 px-5 font-bold text-lg rounded-md"
         >
           Delete User

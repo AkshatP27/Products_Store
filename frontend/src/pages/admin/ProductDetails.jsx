@@ -10,12 +10,11 @@ import {
 const ProductDetails = () => {
   const { id } = useParams();
   // console.log(id);
-  const {
-    productReducer: { productData },
-    userReducer: { userData },
-  } = useSelector((state) => state);
-  const product = productData?.find((product) => product.id == id);
-  // console.log(product, userData);
+  const users = useSelector((state) => state.userReducer.userData);
+  const products = useSelector((state) => state.productReducer.productData);
+
+  const product = products?.find((product) => product.id == id);
+  // console.log(product, users);
 
   const { register, reset, handleSubmit } = useForm({
     defaultValues: {
@@ -36,7 +35,7 @@ const ProductDetails = () => {
 
   const DeleteHandler = () => {
     dispatch(asyncDeleteProduct(id));
-    navigate("/productData");
+    navigate("/products");
   };
 
   return product ? (
@@ -47,7 +46,7 @@ const ProductDetails = () => {
         <div className="w-1/2 h-1/2 px-3">
           <h1 className="text-7xl font-medium mb-7">{product.title}</h1>
           <h2 className="mb-10 text-5xl font-normal text-green-500">
-            &#8377;{product.price}
+            ${product.price}
           </h2>
           <p className="mb-10 text-2xl">{product.description}</p>
           <button className="bg-blue-500 px-5 py-3 font-medium text-lg mt-5">
@@ -59,7 +58,7 @@ const ProductDetails = () => {
       <hr />
 
       {/* For Admin only */}
-      {userData && userData?.isAdmin && (
+      {users && users?.isAdmin && (
         <form
           onSubmit={handleSubmit(UpdateProductHandler)}
           className="flex flex-col items-start mt-18"
