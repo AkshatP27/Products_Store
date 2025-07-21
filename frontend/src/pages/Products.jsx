@@ -40,7 +40,7 @@ const Products = () => {
     return (
       <div
         key={product.id}
-        className="w-[25%] mr-3 mb-3 border rounded-2xl shadow p-2"
+        className="w-[32%] mr-5 mb-5 border rounded-2xl shadow p-2"
       >
         <img
           className="w-full h-[27vh] object-cover rounded-xl"

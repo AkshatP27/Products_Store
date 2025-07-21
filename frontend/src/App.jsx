@@ -4,7 +4,6 @@ import Navbar from "./components/Navbar";
 import { asyncCurrentUser } from "./store/actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
 import { asyncLoadProducts } from "./store/actions/productActions";
-import { useSearchParams } from "react-router-dom";
 
 const App = () => {
   const dispatch = useDispatch();
