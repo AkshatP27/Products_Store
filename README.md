@@ -44,12 +44,45 @@ Products_Store/
 - User authentication (login, register, logout)
 - Admin can create products
 - Product listing and details
-- Add to cart (structure ready)
+- Add to cart (robust logic: prevents duplicate cart items, merges quantities)
+- Cart quantity increment/decrement and removal when quantity is zero
 - State persists user session using localStorage and Redux (with asyncCurrentUser)
 
 ---
 
+
 ## Redux & Data Flow
+
+### Visual Diagram
+
+```
+   ┌──────────────┐         ┌──────────────┐         ┌──────────────┐
+   │   React UI   │         │   useDispatch│         │   Thunk      │
+   │ (Component)  │ ──────▶ │ (Action)     │ ──────▶ │ (Async Logic)│
+   └──────────────┘         └──────────────┘         └──────────────┘
+           ▲                                                    │
+           │                                                    ▼
+   ┌──────────────┐         ◀───────────────┐         ┌──────────────┐
+   │ useSelector  │         │   Redux Store │         │   Axios      │
+   │ (Read State) │ ◀────── │ (Reducers)    │ ◀────── │ (API Call)   │
+   └──────────────┘         └───────────────┘         └──────────────┘
+           ▲                                                    │
+           │                                                    ▼
+   ┌───────────────────────────────────────────────────────────────┐
+   │                        Backend (JSON Server)                 │
+   └───────────────────────────────────────────────────────────────┘
+```
+
+**Flow:**
+- User interacts with React UI (e.g., clicks Add to Cart)
+- Component dispatches an action using `useDispatch`
+- Thunk (async action) handles side effects (API calls via Axios)
+- Axios communicates with the backend (JSON Server)
+- Backend responds, thunk dispatches result to Redux reducers
+- Redux store updates state
+- Components read updated state using `useSelector`
+- UI re-renders with new data
+
 
 ### 1. Store Setup
 - The Redux store is created in `src/store/store.jsx` using `configureStore` from Redux Toolkit.
@@ -83,11 +116,21 @@ Products_Store/
 5. Redux state updates, UI re-renders to show the logged-in state.
 6. On app reload, `App.jsx` dispatches `asyncCurrentUser` to restore the session from localStorage.
 
-### 7. Data Flow Example (Product Listing)
+### 7. Data Flow Example (Product Listing & Cart)
+**Product Listing:**
 1. On app load, `asyncLoadProducts` thunk is dispatched.
 2. Thunk fetches products from the backend and dispatches `loadproduct`.
 3. Redux state updates with the product list.
 4. Products page uses `useSelector` to get products and display them.
+
+**Add to Cart:**
+1. User clicks "Add to Cart" on a product.
+2. The handler checks if the product is already in the cart:
+   - If not, it adds the product with quantity 1.
+   - If yes, it increases the quantity (never creates a duplicate entry).
+3. The cart is always deduplicated before updating the backend/user state.
+4. Cart page displays items using unique product IDs as keys, so no React key warnings occur.
+5. Quantity can be increased/decreased; if quantity reaches zero, the item is removed from the cart.
 
 ---
 
@@ -105,6 +148,7 @@ Products_Store/
 - Admins can create new products; all users can view products.
 - Login, register, and product forms use react-hook-form for validation and submission.
 - All API calls are made via Axios, using a base URL configured in `axiosconfig.jsx`.
+- Cart logic ensures only one entry per product in the cart, merging quantities and preventing duplicate React keys.
 
 ---
 
