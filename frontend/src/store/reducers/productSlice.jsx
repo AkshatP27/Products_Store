@@ -10,10 +10,10 @@ const productSlice = createSlice({
   reducers: {
     // Here we cannot call API; bcoz it's for SYNC Data holding
     loadproduct: (state, action) => {
-      state.productData = action.payload; //Here 'payload' means 'data'
+      state.productData = [...state.productData, ...action.payload]; //Here 'payload' means 'data'
     },
   },
 });
 
 export default productSlice.reducer;
-export const {loadproduct} = productSlice.actions
+export const { loadproduct } = productSlice.actions;

@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { asyncUpdateUser } from "../store/actions/userActions";
 import axios from "../utils/axiosconfig";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { loadproduct } from "../store/reducers/productSlice";
 
 const Products = () => {
   // const products = useSelector((state) => state.productReducer.products);
@@ -11,14 +12,15 @@ const Products = () => {
   const navigate = useNavigate();
 
   const users = useSelector((state) => state.userReducer.userData);
+  const products = useSelector((state) => state.productReducer.productData);
   // Use local state for products with infinite scroll
-  const [products, setProducts] = useState([]);
+  // const [products, setProducts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
 
   // Define fetchProducts with useCallback to avoid dependency issues
   const fetchProducts = async () => {
     try {
-      const {data} = await axios.get(
+      const { data } = await axios.get(
         `/products?_start=${products.length}&_limit=5`
       );
 
@@ -26,7 +28,8 @@ const Products = () => {
         setHasMore(false);
       } else {
         setHasMore(true);
-        setProducts([...products, ...data]);
+        // setProducts([...products, ...data]);
+        dispatch(loadproduct(data))
       }
     } catch (error) {
       console.log(error);
@@ -84,12 +87,12 @@ const Products = () => {
     );
   });
 
-  return products.length > 0 ? (
+  return (
     <InfiniteScroll
       dataLength={products.length}
       next={fetchProducts}
       hasMore={hasMore}
-      loader={<h4 className="text-center my-3">Loading...</h4>}
+      loader={<h4 className="text-center my-3 text-9xl text-yellow-500">LOADING...</h4>}
       endMessage={
         <p style={{ textAlign: "center" }}>
           <b>Yay! You have seen it all</b>
@@ -98,8 +101,6 @@ const Products = () => {
     >
       <div className="overflow-auto flex flex-wrap">{renderProduct}</div>
     </InfiniteScroll>
-  ) : (
-    <div className="text-center p-5">Loading...</div>
   );
 };
 
