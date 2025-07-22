@@ -1,16 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { asyncUpdateUser } from "../store/actions/userActions";
+import axios from "../utils/axiosconfig";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Products = () => {
   // const products = useSelector((state) => state.productReducer.products);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const users = useSelector((state) => state.userReducer.userData);
-  const products = useSelector((state) => state.productReducer.productData);
-  // console.log(products);
+  // Use local state for products with infinite scroll
+  const [products, setProducts] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+
+  // Define fetchProducts with useCallback to avoid dependency issues
+  const fetchProducts = async () => {
+    try {
+      const {data} = await axios.get(
+        `/products?_start=${products.length}&_limit=5`
+      );
+
+      if (data.length == 0) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+        setProducts([...products, ...data]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    // Initial fetch
+    fetchProducts();
+  }, []);
 
   const AddToCartHandler = (product) => {
     // Make a deep copy of the user and their cart
@@ -18,10 +44,10 @@ const Products = () => {
       ...users,
       cart: users.cart.map((item) => ({
         product: { ...item.product },
-        quantity: item.quantity
+        quantity: item.quantity,
       })),
     };
-    
+
     // Check if the product is already in the cart (by product.id)
     const x = copyusers.cart.findIndex((c) => c?.product?.id === product.id);
     if (x === -1) {
@@ -32,8 +58,8 @@ const Products = () => {
       copyusers.cart[x].quantity += 1;
     }
     dispatch(asyncUpdateUser(copyusers.id, copyusers));
-    
-    navigate("/cart")
+
+    navigate("/cart");
   };
 
   const renderProduct = products.map((product) => {
@@ -51,9 +77,7 @@ const Products = () => {
         <small>{product.description.slice(0, 100)}...</small>
         <div className="mt-3 p-3 flex items-center justify-between">
           <p>${product.price}</p>
-          <button onClick={() => AddToCartHandler(product)}>
-            Add to Cart
-          </button>
+          <button onClick={() => AddToCartHandler(product)}>Add to Cart</button>
         </div>
         <Link to={`/products/${product.id}`}>More Info...</Link>
       </div>
@@ -61,9 +85,21 @@ const Products = () => {
   });
 
   return products.length > 0 ? (
-    <div className="overflow-auto flex flex-wrap">{renderProduct}</div>
+    <InfiniteScroll
+      dataLength={products.length}
+      next={fetchProducts}
+      hasMore={hasMore}
+      loader={<h4 className="text-center my-3">Loading...</h4>}
+      endMessage={
+        <p style={{ textAlign: "center" }}>
+          <b>Yay! You have seen it all</b>
+        </p>
+      }
+    >
+      <div className="overflow-auto flex flex-wrap">{renderProduct}</div>
+    </InfiniteScroll>
   ) : (
-    "Loading..."
+    <div className="text-center p-5">Loading...</div>
   );
 };
 

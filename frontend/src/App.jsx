@@ -26,7 +26,7 @@ const App = () => {
   }, [products]); //Rerenders when products data changes
 
   return (
-    <div className="overflow-auto px-[9%] pb-9 w-screen h-screen bg-gray-900 text-white font-thin">
+    <div className="px-[9%] pb-9 bg-gray-900 text-white font-thin">
       <Navbar />
       <Mainroutes />
     </div>
